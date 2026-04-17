@@ -8,7 +8,7 @@ entirely offline.
 
 - Adjustable length from 4 to 32 characters
 - Toggle uppercase, lowercase, numbers and symbols
-- Optional rainbow coloring for readability
+- Optional rainbow coloring
 - Live password strength meter
 - One-click copy to clipboard
 - Dark / light / system theme
