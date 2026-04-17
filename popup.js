@@ -203,6 +203,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /**
+     * Persist current option values to chrome.storage.local.
+     */
+    function savePreferences() {
+        var prefs = {
+            length:    parseInt(document.getElementById('length-slider').value, 10),
+            uppercase: document.getElementById('uppercase-checkbox').checked,
+            lowercase: document.getElementById('lowercase-checkbox').checked,
+            numbers:   document.getElementById('number-checkbox').checked,
+            symbols:   document.getElementById('symbol-checkbox').checked,
+            rainbow:   document.getElementById('rainbow-checkbox').checked
+        };
+        chrome.storage.local.set({ prefs: prefs });
+    }
+
+    /**
+     * Apply stored preferences to the UI. Falls back to HTML defaults
+     * when no preferences are stored yet.
+     *
+     * @param {function} callback - Called after prefs are applied.
+     */
+    function loadPreferences(callback) {
+        chrome.storage.local.get(['prefs'], function(result) {
+            var prefs = result.prefs;
+            if (prefs) {
+                if (typeof prefs.length === 'number') {
+                    document.getElementById('length-slider').value = prefs.length;
+                }
+                if (typeof prefs.uppercase === 'boolean') {
+                    document.getElementById('uppercase-checkbox').checked = prefs.uppercase;
+                }
+                if (typeof prefs.lowercase === 'boolean') {
+                    document.getElementById('lowercase-checkbox').checked = prefs.lowercase;
+                }
+                if (typeof prefs.numbers === 'boolean') {
+                    document.getElementById('number-checkbox').checked = prefs.numbers;
+                }
+                if (typeof prefs.symbols === 'boolean') {
+                    document.getElementById('symbol-checkbox').checked = prefs.symbols;
+                }
+                if (typeof prefs.rainbow === 'boolean') {
+                    document.getElementById('rainbow-checkbox').checked = prefs.rainbow;
+                }
+            }
+            callback();
+        });
+    }
+
     // Regenerate on any input change
     document.querySelectorAll(
         '#uppercase-checkbox, #lowercase-checkbox, #number-checkbox, #symbol-checkbox, #rainbow-checkbox, #length-slider'
@@ -210,6 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
         el.addEventListener('input', function() {
             generatePassword();
             updateLengthDisplay();
+            savePreferences();
         });
     });
 
@@ -217,6 +266,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('generate-icon').addEventListener('click', generatePassword);
     document.getElementById('copy-button').addEventListener('click', copyPassword);
 
-    // Initial generation
-    generatePassword();
+    // Restore saved preferences, then generate the first password
+    loadPreferences(function() {
+        updateLengthDisplay();
+        generatePassword();
+    });
 });
