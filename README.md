@@ -13,6 +13,12 @@ entirely offline.
 - One-click copy to clipboard
 - Dark / light / system theme
 
+## Screenshots
+
+| Light | Dark |
+|-------|------|
+| ![Minter light mode](screenshots/light.png) | ![Minter dark mode](screenshots/dark.png) |
+
 ## How to install (developer mode)
 
 The extension is not listed in the Chrome Web Store. You can install it
